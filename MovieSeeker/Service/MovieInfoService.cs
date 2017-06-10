@@ -1,4 +1,6 @@
-﻿using MovieSeeker.Models;
+﻿using MovieSeeker.DTOs;
+using MovieSeeker.Mappers;
+using MovieSeeker.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -26,16 +28,17 @@ namespace MovieSeeker.Service
             }
         }
 
-        public MovieInfoService()
+        private MovieInfoService()
         {
-            client.BaseAddress = new Uri("http://movieinfoapi.azurewebsites.net/");
+            client.BaseAddress = new Uri("http://localhost:4545"); //new Uri("http://movieinfoapi.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<List<MovieDto>> GetAllMovies()
+        public async Task<List<Movie>> GetAllMovies()
         {
             List<MovieDto> movieList = new List<MovieDto>();
+            List<Movie> retList = new List<Movie>();
 
             HttpResponseMessage response = await client.GetAsync("api/movies");
             if (response.IsSuccessStatusCode)
@@ -43,7 +46,12 @@ namespace MovieSeeker.Service
                 movieList = await response.Content.ReadAsAsync<List<MovieDto>>();
             }
 
-            return movieList;
+            foreach (var movie in movieList)
+            {
+                retList.Add(MovieMapper.Convert(movie));
+            }
+
+            return retList;
         }
     }
 }

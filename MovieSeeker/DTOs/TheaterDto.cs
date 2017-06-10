@@ -1,4 +1,4 @@
-﻿namespace MovieSeeker.Models
+﻿namespace MovieSeeker.DTOs
 {
     public class TheaterDto
     {
