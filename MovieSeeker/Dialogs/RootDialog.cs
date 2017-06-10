@@ -1,7 +1,9 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using MovieSeeker.Models;
+using MovieSeeker.Service;
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,6 +40,9 @@ namespace MovieSeeker.Dialogs
         {
             var response = await result as Activity;
             await context.PostAsync("Processing..");
+
+            //get movie results
+            var res = await MovieInfoService.Instance.GetAllMovies();
 
             context.Wait(ProcessQuerry);
         }
