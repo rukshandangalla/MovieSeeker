@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Bot.Builder.Dialogs;
+﻿using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MovieSeeker.Dialogs
 {
@@ -11,21 +12,23 @@ namespace MovieSeeker.Dialogs
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
-
             return Task.CompletedTask;
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+            await context.PostAsync("MovieSeeker here. I can help you to find movies that are screening in local theaters.");
 
-            // calculate something for us to return
-            int length = (activity.Text ?? string.Empty).Length;
+            await context.Forward(new UserProfileDialog(), ResumeAfterProfileDialog, activity, CancellationToken.None);
+        }
 
-            // return our reply to the user
-            await context.PostAsync($"You sent {activity.Text} which was {length} characters");
+        private async Task ResumeAfterProfileDialog(IDialogContext context, IAwaitable<object> result)
+        {
+            var response = await result as Activity;
+            await context.PostAsync("How can I help you today?");
 
-            context.Wait(MessageReceivedAsync);
+            context.Wait(ResumeAfterProfileDialog);
         }
     }
 }
