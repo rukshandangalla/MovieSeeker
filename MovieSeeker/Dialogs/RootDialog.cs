@@ -1,5 +1,6 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using MovieSeeker.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,12 +24,12 @@ namespace MovieSeeker.Dialogs
             await context.Forward(new UserProfileDialog(), ResumeAfterProfileDialog, activity, CancellationToken.None);
         }
 
-        private async Task ResumeAfterProfileDialog(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeAfterProfileDialog(IDialogContext context, IAwaitable<UserProfile> result)
         {
-            var response = await result as Activity;
-            await context.PostAsync("How can I help you today?");
+            var profile = await result as UserProfile;
+            context.UserData.SetValue("profile", profile);
 
-            context.Wait(ResumeAfterProfileDialog);
+            await context.PostAsync($"Hi {profile.Name}, How can I help you today?");
         }
     }
 }

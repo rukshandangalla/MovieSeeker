@@ -1,47 +1,54 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
+using MovieSeeker.Models;
 using System;
 using System.Threading.Tasks;
 
 namespace MovieSeeker.Dialogs
 {
     [Serializable]
-    public class UserProfileDialog : IDialog<object>
+    public class UserProfileDialog : IDialog<UserProfile>
     {
-        string userName;
+        UserProfile _profile;
 
         public Task StartAsync(IDialogContext context)
         {
-            context.Wait(MessageReceivedAsync);
+            EnsureProfileName(context);
             return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        private void EnsureProfileName(IDialogContext context)
         {
-            var response = await result as Activity;
-
-            context.UserData.TryGetValue("Name", out userName);
-
-            if (string.IsNullOrEmpty(userName))
+            if (!context.UserData.TryGetValue("profile", out _profile))
             {
-                await context.PostAsync("What is your name?");
-                context.Wait(NameEntered);
+                _profile = new UserProfile();
+            }
+
+            if (string.IsNullOrEmpty(_profile.Name))
+            {
+                PromptDialog.Text(context, NameEntered, @"What is your name?");
             }
             else
             {
-                await context.PostAsync($"Hello, {userName} welcomeback!");
-                context.Done(userName);
+                EnsureLocation(context);
             }
         }
 
-        private async Task NameEntered(IDialogContext context, IAwaitable<object> result)
+        private void EnsureLocation(IDialogContext context)
         {
-            var response = await result as Activity;
+            if (string.IsNullOrEmpty(_profile.Location))
+            {
+                PromptDialog.Text(context, NameEntered, @"Where are you from?");
+            }
+            else
+            {
+                context.Done(_profile);
+            }
+        }
 
-            await context.PostAsync($"Hello, {response.Text}");
-            context.UserData.SetValue("Name", response.Text);
-
-            context.Done(response.Text);
+        private async Task NameEntered(IDialogContext context, IAwaitable<string> result)
+        {
+            _profile.Name = await result;
+            EnsureLocation(context);
         }
     }
 }
