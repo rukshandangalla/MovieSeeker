@@ -30,6 +30,16 @@ namespace MovieSeeker.Dialogs
             context.UserData.SetValue("profile", profile);
 
             await context.PostAsync($"Hi {profile.Name}, How can I help you today?");
+
+            context.Wait(ProcessQuerry);
+        }
+
+        private async Task ProcessQuerry(IDialogContext context, IAwaitable<object> result)
+        {
+            var response = await result as Activity;
+            await context.PostAsync("Processing..");
+
+            context.Wait(ProcessQuerry);
         }
     }
 }
