@@ -1,5 +1,6 @@
 ﻿using MovieSeeker.DTOs;
 using MovieSeeker.Models;
+using System.Collections.Generic;
 
 namespace MovieSeeker.Mappers
 {
@@ -7,13 +8,23 @@ namespace MovieSeeker.Mappers
     {
         public static Movie Convert(MovieDto from)
         {
+            var convertedTheaters = new List<Theater>();
+
+            if (from.Theaters != null)
+            {
+                foreach (var theater in from.Theaters)
+                {
+                    convertedTheaters.Add(TheaterMapper.Convert(theater));
+                }
+            }
+
             return new Movie()
             {
                 Id = from.Id,
                 Name = from.Name,
                 Poster = from.Poster,
                 Genre = from.Genre,
-                Theater = from.Theater != null ? TheaterMapper.Convert(from.Theater) : null,
+                Theaters = convertedTheaters,
                 Cast = from.Cast,
                 Trailer = from.Trailer
             };

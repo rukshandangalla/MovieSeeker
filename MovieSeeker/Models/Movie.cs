@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MovieSeeker.Models
 {
@@ -13,7 +14,7 @@ namespace MovieSeeker.Models
 
         public string Poster { get; set; }
 
-        public Theater Theater { get; set; }
+        public List<Theater> Theaters { get; set; }
 
         public string Cast { get; set; }
 

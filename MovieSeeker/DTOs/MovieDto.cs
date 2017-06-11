@@ -1,4 +1,6 @@
-﻿namespace MovieSeeker.DTOs
+﻿using System.Collections.Generic;
+
+namespace MovieSeeker.DTOs
 {
     public class MovieDto
     {
@@ -10,7 +12,7 @@
 
         public string Poster { get; set; }
 
-        public TheaterDto Theater { get; set; }
+        public List<TheaterDto> Theaters { get; set; }
 
         public string Cast { get; set; }
 

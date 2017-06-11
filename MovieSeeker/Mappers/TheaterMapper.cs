@@ -11,7 +11,8 @@ namespace MovieSeeker.Mappers
             {
                 Id = from.Id,
                 Name = from.Name,
-                City = from.City
+                Location = from.Location,
+                Map = from.Map
             };
         }
     }

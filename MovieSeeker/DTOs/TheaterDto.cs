@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
-        public string City { get; set; }
+        public string Location { get; set; }
+
+        public string Map { get; set; }
     }
 }

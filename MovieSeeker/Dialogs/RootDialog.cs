@@ -15,6 +15,7 @@ namespace MovieSeeker.Dialogs
     public class RootDialog : IDialog<object>
     {
         List<Movie> movieList;
+        Movie selectedMovie;
 
         public Task StartAsync(IDialogContext context)
         {
@@ -53,7 +54,7 @@ namespace MovieSeeker.Dialogs
 
                 var reply = context.MakeMessage();
                 reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                reply.Attachments = GetCardsAttachments(movieList);
+                reply.Attachments = GetMovieCardsAttachments(movieList);
 
                 await context.PostAsync(reply);
 
@@ -70,17 +71,40 @@ namespace MovieSeeker.Dialogs
         {
             var response = await result as Activity;
 
-            var selectedMovie = movieList.FirstOrDefault(i => i.Id.ToString() == response.Text);
+            selectedMovie = movieList.FirstOrDefault(i => i.Id.ToString() == response.Text);
 
-            await context.PostAsync("Let me show you the trailer");
+            PromptDialog.Choice(context, ResumeAfterChoice, new List<string> { "Watch trailer", "Available Theaters" }, "What you want to do?");
+        }
 
-            var message = context.MakeMessage();
-            var attachment = GetSelectedTrailer(selectedMovie);
-            message.Attachments.Add(attachment);
+        private async Task ResumeAfterChoice(IDialogContext context, IAwaitable<string> result)
+        {
+            var response = await result as string;
 
-            await context.PostAsync(message);
+            if (response.Equals("Watch trailer"))
+            {
+                await context.PostAsync("let me find the trailer for you");
+                var message = context.MakeMessage();
+                var attachment = GetSelectedTrailer(selectedMovie);
+                message.Attachments.Add(attachment);
 
-            context.Wait(ProcessSelectedMovie);
+                await context.PostAsync(message);
+            }
+            else if (response.Equals("Available Theaters"))
+            {
+                await context.PostAsync("let me find available theaters");
+
+                var reply = context.MakeMessage();
+                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                reply.Attachments = GetTheaterCardsAttachments(selectedMovie.Theaters);
+
+                await context.PostAsync(reply);
+            }
+            else
+            {
+                await context.PostAsync("sorry I don't understand!");
+            }
+
+            context.Wait(MessageReceivedAsync);
         }
 
         private Attachment GetSelectedTrailer(Movie selectedMovie)
@@ -106,13 +130,25 @@ namespace MovieSeeker.Dialogs
             return videoCard.ToAttachment();
         }
 
-        private IList<Attachment> GetCardsAttachments(List<Movie> movieList)
+        private IList<Attachment> GetMovieCardsAttachments(List<Movie> theaters)
         {
             List<Attachment> retVal = new List<Attachment>();
 
             foreach (var movie in movieList)
             {
-                retVal.Add(GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, "Watch Trailer", value: movie.Id.ToString())));
+                retVal.Add(GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, "Select", value: movie.Id.ToString())));
+            }
+
+            return retVal;
+        }
+
+        private IList<Attachment> GetTheaterCardsAttachments(List<Theater> theaters)
+        {
+            List<Attachment> retVal = new List<Attachment>();
+
+            foreach (var theater in theaters)
+            {
+                retVal.Add(GetHeroCard(theater.Name, theater.Location, null, null, new CardAction(ActionTypes.OpenUrl, "Location", value: theater.Map)));
             }
 
             return retVal;
@@ -125,7 +161,7 @@ namespace MovieSeeker.Dialogs
                 Title = title,
                 Subtitle = subtitle,
                 Text = text,
-                Images = new List<CardImage>() { cardImage },
+                Images = cardImage != null ? new List<CardImage>() { cardImage } : null,
                 Buttons = new List<CardAction>() { cardAction }
             };
 
