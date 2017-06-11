@@ -17,6 +17,7 @@ namespace MovieSeeker.Dialogs
     {
         List<Movie> movieList;
         Movie selectedMovie;
+        string channel;
 
         public Task StartAsync(IDialogContext context)
         {
@@ -27,6 +28,9 @@ namespace MovieSeeker.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+
+            channel = activity.ChannelId;
+
             await context.PostAsync("MovieSeeker here. I can help you to find movies that are screening in local theaters.");
 
             await context.Forward(new UserProfileDialog(), ResumeAfterProfileDialog, activity, CancellationToken.None);
@@ -83,11 +87,19 @@ namespace MovieSeeker.Dialogs
             if (response.Equals("Watch trailer"))
             {
                 await context.PostAsync("let me find the trailer for you");
-                var message = context.MakeMessage();
-                var attachment = GetSelectedTrailer(selectedMovie);
-                message.Attachments.Add(attachment);
 
-                await context.PostAsync(message);
+                if (channel == "facebook")
+                {
+                    await context.PostAsync(selectedMovie.Trailer);
+                }
+                else
+                {
+                    var message = context.MakeMessage();
+                    var attachment = GetSelectedTrailer(selectedMovie);
+                    message.Attachments.Add(attachment);
+
+                    await context.PostAsync(message);
+                }
             }
             else if (response.Equals("Available Theaters"))
             {
@@ -114,10 +126,10 @@ namespace MovieSeeker.Dialogs
                 Title = selectedMovie.Name,
                 Subtitle = selectedMovie.Genre,
                 Text = $"Cast: {selectedMovie.Cast}",
-                Image = new ThumbnailUrl
-                {
-                    Url = selectedMovie.Poster
-                },
+                //Image = new ThumbnailUrl
+                //{
+                //    Url = selectedMovie.Poster
+                //},
                 Media = new List<MediaUrl>
                 {
                     new MediaUrl()
