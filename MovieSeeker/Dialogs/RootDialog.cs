@@ -2,6 +2,7 @@
 using Microsoft.Bot.Connector;
 using MovieSeeker.Data.Models;
 using MovieSeeker.Data.Service;
+using MovieSeeker.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,7 +137,7 @@ namespace MovieSeeker.Dialogs
 
             foreach (var movie in movieList)
             {
-                retVal.Add(GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, "Select", value: movie.Id.ToString())));
+                retVal.Add(MovieSeekerUtilities.GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, "Select", value: movie.Id.ToString())));
             }
 
             return retVal;
@@ -148,24 +149,10 @@ namespace MovieSeeker.Dialogs
 
             foreach (var theater in theaters)
             {
-                retVal.Add(GetHeroCard(theater.Name, theater.Location, null, null, new CardAction(ActionTypes.OpenUrl, "Location", value: theater.Map)));
+                retVal.Add(MovieSeekerUtilities.GetHeroCard(theater.Name, theater.Location, null, null, new CardAction(ActionTypes.OpenUrl, "Location", value: theater.Map)));
             }
 
             return retVal;
-        }
-
-        private static Attachment GetHeroCard(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
-        {
-            var heroCard = new HeroCard
-            {
-                Title = title,
-                Subtitle = subtitle,
-                Text = text,
-                Images = cardImage != null ? new List<CardImage>() { cardImage } : null,
-                Buttons = new List<CardAction>() { cardAction }
-            };
-
-            return heroCard.ToAttachment();
         }
     }
 }
