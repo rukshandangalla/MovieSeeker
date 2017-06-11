@@ -39,33 +39,30 @@ namespace MovieSeeker.Dialogs
 
             await context.PostAsync($"Hi {profile.Name}, How can I help you today?");
 
-            context.Wait(ProcessQuerry);
+            context.Call(new MovieSeekDialog(), ResumeAfterMovieSeekDialog);
+        }
+
+        private async Task ResumeAfterMovieSeekDialog(IDialogContext context, IAwaitable<object> result)
+        {
+            await ProcessQuerry(context, result);
         }
 
         private async Task ProcessQuerry(IDialogContext context, IAwaitable<object> result)
         {
             var response = await result as Activity;
 
-            if (response.Text.ToLower().Contains("find"))
-            {
-                await context.PostAsync("On it. Let me check");
+            await context.PostAsync("On it. Let me check");
 
-                //get movie results
-                movieList = await MovieInfoService.Instance.GetAllMovies();
+            //get movie results
+            movieList = await MovieInfoService.Instance.GetAllMovies();
 
-                var reply = context.MakeMessage();
-                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                reply.Attachments = GetMovieCardsAttachments(movieList);
+            var reply = context.MakeMessage();
+            reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+            reply.Attachments = GetMovieCardsAttachments(movieList);
 
-                await context.PostAsync(reply);
+            await context.PostAsync(reply);
 
-                context.Wait(ProcessSelectedMovie);
-            }
-            else
-            {
-                await context.PostAsync($"sorry I don't understand!");
-                context.Wait(ProcessQuerry);
-            }
+            context.Wait(ProcessSelectedMovie);
         }
 
         private async Task ProcessSelectedMovie(IDialogContext context, IAwaitable<object> result)
