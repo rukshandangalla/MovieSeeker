@@ -30,7 +30,7 @@ namespace MovieSeeker.Data.Service
 
         private MovieInfoService()
         {
-            client.BaseAddress = new Uri("http://localhost:4545"); //new Uri("http://movieinfoapi.azurewebsites.net/");
+            client.BaseAddress = new Uri("http://movieinfoapi.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

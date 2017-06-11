@@ -62,6 +62,8 @@ namespace MovieSeeker.Dialogs
 
             await context.PostAsync(reply);
 
+            await context.PostAsync("You can select one movie to watch trailer or locate available theaters.");
+
             context.Wait(ProcessSelectedMovie);
         }
 
