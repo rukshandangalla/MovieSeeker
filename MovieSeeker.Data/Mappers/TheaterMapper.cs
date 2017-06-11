@@ -12,7 +12,8 @@ namespace MovieSeeker.Data.Mappers
                 Id = from.Id,
                 Name = from.Name,
                 Location = from.Location,
-                Map = from.Map
+                Map = from.Map,
+                Cordinates = from.Cordinates
             };
         }
     }

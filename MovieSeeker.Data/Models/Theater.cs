@@ -12,5 +12,7 @@ namespace MovieSeeker.Data.Models
         public string Location { get; set; }
 
         public string Map { get; set; }
+
+        public string Cordinates { get; set; }
     }
 }
