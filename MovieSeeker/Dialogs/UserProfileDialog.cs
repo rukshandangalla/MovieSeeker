@@ -1,5 +1,5 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
-using MovieSeeker.Models;
+using MovieSeeker.Data.Models;
 using System;
 using System.Threading.Tasks;
 

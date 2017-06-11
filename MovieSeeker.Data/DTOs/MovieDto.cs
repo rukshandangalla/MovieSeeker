@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace MovieSeeker.Models
+namespace MovieSeeker.Data.DTOs
 {
-    [Serializable]
-    public class Movie
+    public class MovieDto
     {
         public int Id { get; set; }
 
@@ -14,7 +12,7 @@ namespace MovieSeeker.Models
 
         public string Poster { get; set; }
 
-        public List<Theater> Theaters { get; set; }
+        public List<TheaterDto> Theaters { get; set; }
 
         public string Cast { get; set; }
 

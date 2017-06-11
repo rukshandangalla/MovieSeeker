@@ -1,7 +1,7 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using MovieSeeker.Models;
-using MovieSeeker.Service;
+using MovieSeeker.Data.Models;
+using MovieSeeker.Data.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;

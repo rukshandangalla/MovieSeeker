@@ -1,16 +1,12 @@
 ﻿using System;
 
-namespace MovieSeeker.Models
+namespace MovieSeeker.Data.Models
 {
     [Serializable]
-    public class Theater
+    public class UserProfile
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string Location { get; set; }
-
-        public string Map { get; set; }
     }
 }

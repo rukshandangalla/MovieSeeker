@@ -1,6 +1,9 @@
-﻿namespace MovieSeeker.DTOs
+﻿using System;
+
+namespace MovieSeeker.Data.Models
 {
-    public class TheaterDto
+    [Serializable]
+    public class Theater
     {
         public int Id { get; set; }
 

@@ -1,7 +1,7 @@
-﻿using MovieSeeker.DTOs;
-using MovieSeeker.Models;
+﻿using MovieSeeker.Data.DTOs;
+using MovieSeeker.Data.Models;
 
-namespace MovieSeeker.Mappers
+namespace MovieSeeker.Data.Mappers
 {
     public static class TheaterMapper
     {

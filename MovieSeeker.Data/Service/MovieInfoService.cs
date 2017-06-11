@@ -1,13 +1,13 @@
-﻿using MovieSeeker.DTOs;
-using MovieSeeker.Mappers;
-using MovieSeeker.Models;
+﻿using MovieSeeker.Data.DTOs;
+using MovieSeeker.Data.Mappers;
+using MovieSeeker.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace MovieSeeker.Service
+namespace MovieSeeker.Data.Service
 {
     public class MovieInfoService
     {

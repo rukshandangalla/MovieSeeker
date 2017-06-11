@@ -1,8 +1,8 @@
-﻿using MovieSeeker.DTOs;
-using MovieSeeker.Models;
+﻿using MovieSeeker.Data.DTOs;
+using MovieSeeker.Data.Models;
 using System.Collections.Generic;
 
-namespace MovieSeeker.Mappers
+namespace MovieSeeker.Data.Mappers
 {
     public static class MovieMapper
     {
