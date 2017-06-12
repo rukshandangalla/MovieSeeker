@@ -144,7 +144,7 @@ namespace MovieSeeker.Dialogs
 
             foreach (var theater in theaters)
             {
-                retVal.Add(MovieSeekerUtilities.GetHeroCard(theater.Name, theater.Location, null, new CardImage(url: theater.Cordinates), new CardAction(ActionTypes.OpenUrl, "Location", value: theater.Map)));
+                retVal.Add(MovieSeekerUtilities.GetHeroCard(theater.Name, theater.Location, selectedMovie.Name, new CardImage(url: theater.Cordinates), new CardAction(ActionTypes.OpenUrl, "Location", value: theater.Map)));
             }
 
             return retVal;
