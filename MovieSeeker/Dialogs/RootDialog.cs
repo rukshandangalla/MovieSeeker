@@ -132,7 +132,7 @@ namespace MovieSeeker.Dialogs
 
             foreach (var movie in movieList)
             {
-                retVal.Add(MovieSeekerUtilities.GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, selectedMovie.Name, value: movie.Id.ToString())));
+                retVal.Add(MovieSeekerUtilities.GetHeroCard(movie.Name, movie.Genre, $"Cast: {movie.Cast}", new CardImage(url: movie.Poster), new CardAction(ActionTypes.PostBack, movie.Name, value: movie.Id.ToString())));
             }
 
             return retVal;
