@@ -73,7 +73,15 @@ namespace MovieSeeker.Dialogs
 
             selectedMovie = movieList.FirstOrDefault(i => i.Id.ToString() == response.Text);
 
-            PromptDialog.Choice(context, ResumeAfterChoice, new List<string> { "Watch trailer", "Available Theaters" }, "What you want to do?");
+            if (selectedMovie != null)
+            {
+                PromptDialog.Choice(context, ResumeAfterChoice, new List<string> { "Watch trailer", "Available Theaters" }, "What you want to do?");
+            }
+            else
+            {
+                await context.PostAsync("I don't understand");
+                context.Wait(ProcessSelectedMovie);
+            }
         }
 
         private async Task ResumeAfterChoice(IDialogContext context, IAwaitable<string> result)
